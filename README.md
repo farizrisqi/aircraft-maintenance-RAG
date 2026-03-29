@@ -7,7 +7,6 @@ A Python-based NLP project designed to match newly reported aircraft cabin/syste
 This project serves as the foundational layer (the *Retrieval-Augmented* phase) for building an AI-powered aviation technician assistant.
 
 ## ✨ Key Features
-* **Local & Hardware-Aware Execution:** Runs seamlessly in a local environment. Automatically detects and utilizes hardware acceleration (**CUDA** for NVIDIA, **MPS** for Apple Silicon, or **CPU**) for the embedding process.
 * **Auto-Translation Pipeline:** Dynamically translates defect descriptions from any language into English using `deep-translator` to maximize the performance of the embedding model.
 * **Semantic Vector Search:** Utilizes the `sentence-transformers` model (`all-MiniLM-L6-v2`) to compute the semantic similarity (*cosine similarity*) between current issues and thousands of historical repair logs.
 * **Domain-Specific Regex Bonus:** Extracts physical aircraft entities (Seat Row/Letter, Lavatory, Galley, Door) from the original text. The system applies a *multiplier bonus score* if physical location matches are detected, preventing the AI from hallucinating on specific details.
