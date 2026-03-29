@@ -13,14 +13,24 @@ This project serves as the foundational layer (the *Retrieval-Augmented* phase) 
 * **Domain-Specific Regex Bonus:** Extracts physical aircraft entities (Seat Row/Letter, Lavatory, Galley, Door) from the original text. The system applies a *multiplier bonus score* if physical location matches are detected, preventing the AI from hallucinating on specific details.
 * **Live Database Integration:** Retrieves real-time defect reporting data directly from Google Sheets via a Service Account, integrated with a local Excel-based maintenance database.
 
+## 🏗️ Data Pipeline Architecture (ETL & Medallion Concept)
 
-2. **Install dependencies:**
+To ensure data quality, scalability, and maintainability, this matching engine is designed with robust **ETL (Extract, Transform, Load)** principles and maps to the **Medallion Architecture** data design pattern:
+
+* **Extract:** Data is ingested from multiple operational sources. 
+* **Transform (The Medallion Layers):**
+  * 🥉 **Bronze Layer (Raw Data):** The raw, unstructured data lands exactly as it was extracted. Column names might be messy, dates are in various formats, and text contains mixed languages. 
+  * 🥈 **Silver Layer (Cleansed & Conformed):** Data is normalized using `pandas`. Column headers are standardized, Excel serial dates are converted to datetime objects, and null values are handled. The auto-translation pipeline converts all defect descriptions into a uniform language (English), and regex entity extraction (seats, doors, galleys) is performed to enrich the dataset.
+  * 🥇 **Gold Layer (AI-Ready Data):** The cleansed text is processed through the Sentence Transformer model to generate vector embeddings. The hybrid scoring engine then computes the semantic similarity and applies regex bonus multipliers. The result is a highly refined, curated dataset with final match rankings.
+* **Load:** The final matched outputs (Gold data) are loaded into a structured JSON file format, serving as the knowledge base ready for analytical dashboards or downstream LLM integration.
+
+1. **Install dependencies:**
    It is highly recommended to use a Virtual Environment.
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Setup Credentials & Database:**
+2. **Setup Credentials & Database:**
    Ensure the Google Service Account file (`credentials.json`) and the latest historical maintenance data are placed in the correct directories according to the internal engineering team's configuration.
 
 ## 🚀 Usage
